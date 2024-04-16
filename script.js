@@ -1,16 +1,15 @@
 'use strict';
 
-let egypt;
+let country = 'united states';
 
 const xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://restcountries.com/v3.1/all');
+xhr.open('GET', `https://restcountries.com/v3.1/name/${country}`);
 xhr.send();
 
 xhr.onload = function () {
-  const response = JSON.parse(xhr.response);
-  egypt =
-    response[response.findIndex(country => country.name.common === 'Egypt')];
-  let timeZone = egypt.timezones[0];
+  const [response] = JSON.parse(xhr.response);
+  let timeZone = response.timezones[0];
+  console.log(response);
   getCountryDateTime(timeZone);
 };
 
