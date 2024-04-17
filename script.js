@@ -1,20 +1,70 @@
 'use strict';
 
-let country = 'united states';
+const input = document.querySelector('.search-bar');
+const form = document.querySelector('.search');
 
-const xhr = new XMLHttpRequest();
-xhr.open('GET', `https://restcountries.com/v3.1/name/${country}`);
-xhr.send();
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  const country = input.value;
+  getCountryData(country);
+});
 
-xhr.onload = function () {
-  const [response] = JSON.parse(xhr.response);
-  let timeZone = response.timezones[0];
-  console.log(response);
-  getCountryDateTime(timeZone);
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(result => {
+      let [countryResult] = result;
+      if (result[0].name.common === 'Israel') countryResult = null;
+      const currencies = [];
+      for (const key in countryResult.currencies) {
+        currencies.push(countryResult.currencies[key].name);
+        renderData(countryResult, currencies[0]);
+      }
+    })
+    .catch(() => {
+      const errorMsg = document.querySelector('.error-message');
+      errorMsg.style.display = 'block';
+    });
 };
 
-const dateMile = new Date().getTime();
-// const utcTime =
+const renderData = function (country, currency) {
+  const countries = document.querySelector('.countries');
+  const html = `
+    <div class="country">
+      <div class="flag">
+        <img
+          src="${country.flags.png}"
+          alt="${country.flags.alt}"
+        />
+      </div>
+      <div class="info">
+        <div class="info-name">
+          <ion-icon name="at-outline"></ion-icon>
+          <span>Name: ${country.name.common}</span>
+        </div>
+        <div class="info-region">
+          <ion-icon name="earth-outline"></ion-icon>
+          <span>Region: ${country.region}</span>
+        </div>
+        <div class="info-time">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>Time: ${getCountryDateTime(country.timezones[0])}</span>
+        </div>
+        <div class="info-population">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>Population: ${country.population}</span>
+        </div>
+        <div class="info-curruncy">
+          <ion-icon name="cash-outline"></ion-icon>
+          <span>Currency: ${currency}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  countries.insertAdjacentHTML('beforeend', html);
+  input.value = '';
+};
 
 const getCountryDateTime = function (timeZone) {
   // Check if 'UTC+' or 'UTC-'
@@ -44,5 +94,5 @@ const getCountryDateTime = function (timeZone) {
   }).format(countryTime);
 
   // Log formatted date and time to the console
-  console.log(formattedCountryTime);
+  return formattedCountryTime;
 };
