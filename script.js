@@ -12,8 +12,8 @@ form.addEventListener('submit', function (e) {
 
 const getCountryData = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then(response => response.json())
-    .then(result => {
+    .then((response) => response.json())
+    .then((result) => {
       let [countryResult] = result;
       if (result[0].name.common === 'Israel') countryResult = null;
       const currencies = [];
@@ -73,6 +73,8 @@ const getCountryDateTime = function (timeZone) {
     timeZone = parseInt(timeZone.split('+')[1]);
   } else if (timeZone.includes('-')) {
     timeZone = -parseInt(timeZone.split('-')[1]);
+  } else {
+    timeZone = 0;
   }
 
   // Convert Time Zone to mileseconds
