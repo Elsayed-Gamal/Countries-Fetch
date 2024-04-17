@@ -19,8 +19,8 @@ const getCountryData = function (country) {
       const currencies = [];
       for (const key in countryResult.currencies) {
         currencies.push(countryResult.currencies[key].name);
-        renderData(countryResult, currencies[0]);
       }
+      renderData(countryResult, currencies[0]);
     })
     .catch(() => {
       errorMsg.style.display = 'block';
