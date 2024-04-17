@@ -2,6 +2,7 @@
 
 const input = document.querySelector('.search-bar');
 const form = document.querySelector('.search');
+const errorMsg = document.querySelector('.error-message');
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
@@ -22,7 +23,6 @@ const getCountryData = function (country) {
       }
     })
     .catch(() => {
-      const errorMsg = document.querySelector('.error-message');
       errorMsg.style.display = 'block';
     });
 };
@@ -64,6 +64,7 @@ const renderData = function (country, currency) {
 
   countries.insertAdjacentHTML('beforeend', html);
   input.value = '';
+  if (errorMsg.style.display === 'block') errorMsg.style.display = 'none';
 };
 
 const getCountryDateTime = function (timeZone) {
